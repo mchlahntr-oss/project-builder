@@ -85,11 +85,11 @@ This version pins the app shell to the full viewport with `inset: 0`, fixes the 
 
 This build changes the app shell from a fixed/floating bottom nav to a flex layout where the bottom menu is part of the full-height app. It also changes the PWA `background_color` from light beige to dark green so iPhone cannot expose a light safe-area strip behind the app. The CSS/JS files are cache-busted with `?v=10`, and the service worker now uses network-first loading for HTML so future updates are less likely to get stuck behind an old cache.
 
-After uploading, open the app URL with `?v=10` once, such as `https://yourname.github.io/house-project-tracker/index.html?v=10`. Then open Settings and confirm it says `Build v10`. Your data key remains `houseProjectTracker.v1`.
+After uploading, open the app URL with `?v=10` once, such as `https://yourname.github.io/house-project-tracker/index.html?v=10`. Then open Settings and confirm it says `Build v11`. Your data key remains `houseProjectTracker.v1`.
 
 
-## v10 iPhone bottom nav flush fit
+## v11 edge-to-edge bottom dock
 
 This build stops using a calculated JavaScript app height for the main shell. The shell is now pinned with `top: 0` and `bottom: 0`, so the browser stretches it to the full available iPhone screen instead of relying on a viewport height value that can be reported too short. The bottom nav no longer adds extra safe-area padding that can look like unused space below the menu. The storage key remains `houseProjectTracker.v1`.
 
-After uploading, open `index.html?v=10` once and confirm Settings says `Build v10`.
+After uploading, open `index.html?v=10` once and confirm Settings says `Build v11`.

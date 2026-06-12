@@ -13,8 +13,7 @@
   --chrome: #20261f;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
-  --nav-visible-height: 86px;
-  --nav-total-height: calc(var(--nav-visible-height) + var(--safe-bottom));
+  --nav-height: 86px;
   --app-height: 100%;
   --reported-height: 100%;
 }
@@ -145,7 +144,7 @@ button:focus {
   right: auto;
   transform: translateX(-50%);
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) var(--nav-height);
   overflow: hidden;
   background-color: var(--chrome);
   z-index: 1;
@@ -193,50 +192,33 @@ h3 { font-size: 1rem; margin-bottom: .35rem; }
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-  padding: 16px 14px calc(var(--nav-visible-height) + 18px);
+  padding: 16px 14px 18px;
   background:
     radial-gradient(circle at 20% 0%, rgba(220,191,127,.35), transparent 24rem),
     linear-gradient(180deg, #f4efe6 0%, var(--bg) 42%, #efe9dd 100%);
 }
 
 .bottom-nav {
-  /* v10: iPhone PWAs reserve a bottom safe-area for the home indicator.
-     Previous versions painted that region dark, but left it visually empty.
-     This nav is intentionally pulled down by the safe-area amount so the
-     buttons occupy the visible bottom edge instead of sitting above it. */
-  position: fixed;
-  left: 50%;
-  bottom: calc(-1 * var(--safe-bottom));
-  transform: translateX(-50%);
+  /* v11: edge-to-edge dock. No safe-area reservation is added here;
+     the nav itself occupies the physical bottom of the PWA viewport. */
+  position: relative;
   z-index: 60;
-  width: min(100%, 720px);
-  height: var(--nav-total-height);
+  width: 100%;
+  height: var(--nav-height);
+  min-height: var(--nav-height);
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  align-content: start;
-  align-items: start;
+  align-items: center;
   gap: 6px;
-  padding: 8px 10px calc(8px + var(--safe-bottom));
+  padding: 8px 10px;
   margin: 0;
   background-color: var(--chrome);
   box-shadow: 0 -12px 30px rgba(0,0,0,.18);
-  overflow: visible;
+  overflow: hidden;
 }
 
 .bottom-nav::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background-color: var(--chrome);
-  pointer-events: none;
-  z-index: -1;
-}
-
-@media (display-mode: standalone) {
-  .bottom-nav { bottom: calc(-1 * var(--safe-bottom)); }
+  content: none;
 }
 
 .nav-item {
