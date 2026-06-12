@@ -70,3 +70,7 @@ This version adds a stronger mobile zoom lock. It uses a stricter viewport tag, 
 ## Version note
 
 This v5 build keeps the same local storage key (`houseProjectTracker.v1`) and only changes mobile viewport/safe-area behavior. Uploading these files over the existing GitHub Pages files should not erase app data. Export a backup first as a precaution.
+
+
+## v6 layout fix
+This version keeps the same local data storage key (`houseProjectTracker.v1`) and extends the bottom navigation/background through the iPhone safe-area/home-indicator region to remove the white gap below the menu.
