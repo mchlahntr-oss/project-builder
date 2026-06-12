@@ -14,7 +14,8 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
   --nav-height: calc(76px + var(--safe-bottom));
-  --app-height: 100dvh;
+  --app-height: 100%;
+  --reported-height: 100%;
 }
 
 * {
@@ -39,8 +40,8 @@ html {
 
 body {
   width: 100%;
-  height: 100%;
-  min-height: 100%;
+  height: auto !important;
+  min-height: 0 !important;
   margin: 0;
   overflow: hidden;
   overscroll-behavior: none;
@@ -53,12 +54,13 @@ body {
 }
 
 @supports (height: 100dvh) {
-  html, body { height: 100dvh; }
+  html { height: 100%; }
+  body { height: auto !important; }
 }
 
 @supports (-webkit-touch-callout: none) {
-  html { height: -webkit-fill-available; }
-  body { min-height: -webkit-fill-available; }
+  html { height: 100%; }
+  body { height: auto !important; min-height: 0 !important; }
 }
 
 button,
@@ -130,25 +132,26 @@ button:focus {
 }
 
 .app-shell {
-  width: 100%;
-  height: var(--app-height);
-  min-height: 100vh;
-  min-height: 100dvh;
-  max-width: 720px;
-  margin: 0 auto;
+  width: min(100%, 720px);
+  height: auto !important;
+  min-height: 0 !important;
+  max-width: none;
+  margin: 0;
   position: fixed;
-  inset: 0;
+  top: 0;
+  bottom: 0;
   left: 50%;
+  right: auto;
   transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   overflow: hidden;
   background-color: var(--chrome);
   z-index: 1;
 }
 
 @supports (-webkit-touch-callout: none) {
-  .app-shell { min-height: -webkit-fill-available; }
+  .app-shell { height: auto !important; min-height: 0 !important; }
 }
 
 .topbar {
@@ -203,8 +206,9 @@ h3 { font-size: 1rem; margin-bottom: .35rem; }
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 6px;
-  padding: 8px 10px calc(10px + var(--safe-bottom));
+  padding: 8px 10px 8px;
   margin: 0;
+  align-self: end;
   background-color: var(--chrome);
   box-shadow: 0 -12px 30px rgba(0,0,0,.18);
   overflow: visible;
@@ -223,7 +227,7 @@ h3 { font-size: 1rem; margin-bottom: .35rem; }
 }
 
 @media (display-mode: standalone) {
-  .bottom-nav { padding-bottom: calc(12px + var(--safe-bottom)); }
+  .bottom-nav { padding-bottom: 8px; }
 }
 
 .nav-item {

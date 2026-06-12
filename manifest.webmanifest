@@ -2,7 +2,7 @@
   "name": "House Project Tracker",
   "short_name": "House Projects",
   "description": "A mobile-first tracker for house projects, tasks, budgets, and weekly priorities.",
-  "start_url": "./index.html",
+  "start_url": "./index.html?v=9",
   "scope": "./",
   "display": "standalone",
   "background_color": "#20261f",

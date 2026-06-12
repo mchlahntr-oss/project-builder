@@ -10,7 +10,7 @@
 
   <script>
     /* Disable page zoom as much as mobile browsers allow.
-       v8 sweep: prevents iOS form zoom, removes the bottom-gap risk by using a flex app shell, and exposes a visible build marker for update verification. */
+       v9 fit: keeps zoom disabled while pinning the app shell to the real viewport bottom instead of using a calculated height. */
     (() => {
       const lockedViewport = 'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content';
       const editableSelector = 'input, textarea, select, button, [contenteditable="true"]';
@@ -27,13 +27,15 @@
       }
 
       function setAppHeight() {
-        // v8: use the larger of the layout viewport and visual viewport so the
-        // app shell fills the available iPhone area while still adjusting when
-        // the browser chrome/keyboard changes. CSS falls back to 100dvh.
+        // v9: do not drive shell height with JS. iPhone can report a
+        // too-short visual viewport, which leaves a strip below the nav.
+        // The CSS pins the shell with top:0 and bottom:0; this variable is
+        // only diagnostic/fallback information for future debugging.
         const visualHeight = window.visualViewport ? window.visualViewport.height : 0;
         const layoutHeight = window.innerHeight || document.documentElement.clientHeight || 0;
-        const height = Math.max(visualHeight, layoutHeight);
-        if (height) document.documentElement.style.setProperty('--app-height', `${height}px`);
+        const screenHeight = window.screen && window.screen.height ? window.screen.height : 0;
+        const height = Math.max(visualHeight, layoutHeight, screenHeight);
+        if (height) document.documentElement.style.setProperty('--reported-height', `${height}px`);
       }
 
       function normalizeControl(target) {
@@ -90,8 +92,8 @@
     })();
   </script>
   <title>House Project Tracker</title>
-  <link rel="manifest" href="manifest.webmanifest?v=8" />
-  <link rel="stylesheet" href="styles.css?v=8" />
+  <link rel="manifest" href="manifest.webmanifest?v=9" />
+  <link rel="stylesheet" href="styles.css?v=9" />
 </head>
 <body>
   <div class="app-shell">
@@ -265,7 +267,7 @@
         <button class="icon-btn" id="closeSettings" aria-label="Close">×</button>
       </div>
       <p class="muted">Data is saved on this device. Use export/import to back it up or move it to another phone.</p>
-      <p class="version-note">Build v8 · bottom-gap diagnostic + iPhone fit sweep</p>
+      <p class="version-note">Build v9 · pinned full-height iPhone fit</p>
       <div class="stack">
         <button class="secondary" id="exportData">Export backup JSON</button>
         <label class="file-import">Import backup JSON
@@ -284,6 +286,6 @@
     </section>
   </template>
 
-  <script src="app.js?v=8"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>
