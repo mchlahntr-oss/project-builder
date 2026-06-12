@@ -79,3 +79,10 @@ This version keeps the same local data storage key (`houseProjectTracker.v1`) an
 ## v7 iPhone bottom gap fix
 
 This version pins the app shell to the full viewport with `inset: 0`, fixes the bottom navigation to `bottom: 0`, extends the dark background behind the iPhone safe area, and avoids writing `window.innerHeight` into the layout because that can create a white strip near the home indicator. The data storage key remains `houseProjectTracker.v1`.
+
+
+## v8 bottom-gap diagnostic sweep
+
+This build changes the app shell from a fixed/floating bottom nav to a flex layout where the bottom menu is part of the full-height app. It also changes the PWA `background_color` from light beige to dark green so iPhone cannot expose a light safe-area strip behind the app. The CSS/JS files are cache-busted with `?v=8`, and the service worker now uses network-first loading for HTML so future updates are less likely to get stuck behind an old cache.
+
+After uploading, open the app URL with `?v=8` once, such as `https://yourname.github.io/house-project-tracker/index.html?v=8`. Then open Settings and confirm it says `Build v8`. Your data key remains `houseProjectTracker.v1`.

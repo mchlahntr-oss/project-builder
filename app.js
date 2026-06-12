@@ -597,8 +597,18 @@ document.getElementById('resetData').addEventListener('click', () => {
 });
 
 if ('serviceWorker' in navigator) {
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js').then(registration => registration.update()).catch(console.warn);
+    navigator.serviceWorker.register('./service-worker.js?v=8').then(registration => {
+      registration.update();
+      if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+    }).catch(console.warn);
   });
 }
 

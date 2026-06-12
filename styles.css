@@ -10,12 +10,12 @@
   --danger: #9a392f;
   --shadow: 0 16px 34px rgba(44, 40, 31, .12);
   --radius: 22px;
+  --chrome: #20261f;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
-  --nav-height: calc(74px + var(--safe-bottom));
-  --app-height: 100vh;
+  --nav-height: calc(76px + var(--safe-bottom));
+  --app-height: 100dvh;
 }
-
 
 * {
   box-sizing: border-box;
@@ -29,8 +29,9 @@ html {
   width: 100%;
   height: 100%;
   min-height: 100%;
+  margin: 0;
   overflow: hidden;
-  background: #20261f !important;
+  background-color: var(--chrome) !important;
   -webkit-text-size-adjust: 100% !important;
   text-size-adjust: 100% !important;
   touch-action: pan-x pan-y;
@@ -46,33 +47,18 @@ body {
   touch-action: pan-x pan-y;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
-  background: #20261f !important;
+  background-color: var(--chrome) !important;
   position: fixed;
   inset: 0;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: -120px;
-  height: calc(220px + var(--safe-bottom));
-  background: #20261f;
-  z-index: 0;
-  pointer-events: none;
+@supports (height: 100dvh) {
+  html, body { height: 100dvh; }
 }
 
-body::after {
-  content: "";
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: -80px;
-  height: calc(120px + var(--safe-bottom));
-  background: #20261f;
-  z-index: 45;
-  pointer-events: none;
+@supports (-webkit-touch-callout: none) {
+  html { height: -webkit-fill-available; }
+  body { min-height: -webkit-fill-available; }
 }
 
 button,
@@ -124,7 +110,6 @@ select {
   appearance: none;
 }
 
-/* v4 no-zoom hardening. Keeps iPhone Safari from auto-zooming form fields and blocks double-tap zoom behavior in supporting browsers. */
 input:focus,
 textarea:focus,
 select:focus,
@@ -144,12 +129,11 @@ button:focus {
   }
 }
 
-
 .app-shell {
   width: 100%;
-  height: auto;
-  min-height: 0;
-  max-height: none;
+  height: var(--app-height);
+  min-height: 100vh;
+  min-height: 100dvh;
   max-width: 720px;
   margin: 0 auto;
   position: fixed;
@@ -159,17 +143,17 @@ button:focus {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 20% 0%, rgba(220,191,127,.35), transparent 24rem),
-    linear-gradient(180deg, #f4efe6 0%, var(--bg) 42%, #efe9dd 100%);
+  background-color: var(--chrome);
   z-index: 1;
 }
 
-/* Keep the shell pinned with inset: 0. Avoid -webkit-fill-available here because it can leave a visible strip above the iPhone home indicator in standalone PWAs. */
+@supports (-webkit-touch-callout: none) {
+  .app-shell { min-height: -webkit-fill-available; }
+}
 
 .topbar {
-  position: sticky;
-  top: 0;
+  flex: 0 0 auto;
+  position: relative;
   z-index: 5;
   display: flex;
   align-items: center;
@@ -177,7 +161,7 @@ button:focus {
   gap: 1rem;
   padding: calc(16px + env(safe-area-inset-top, 0px)) 18px 12px;
   backdrop-filter: blur(16px);
-  background: rgba(247,244,239,.86);
+  background: rgba(247,244,239,.94);
   border-bottom: 1px solid rgba(222,214,200,.75);
 }
 
@@ -206,58 +190,40 @@ h3 { font-size: 1rem; margin-bottom: .35rem; }
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   padding: 16px 14px 18px;
-  padding-bottom: calc(96px + var(--safe-bottom));
-  background: transparent;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(220,191,127,.35), transparent 24rem),
+    linear-gradient(180deg, #f4efe6 0%, var(--bg) 42%, #efe9dd 100%);
 }
 
 .bottom-nav {
-  position: fixed;
-  left: 50%;
-  right: auto;
-  bottom: 0;
-  transform: translateX(-50%);
   flex: 0 0 auto;
-  width: min(100%, 720px);
+  position: relative;
   z-index: 60;
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 6px;
   padding: 8px 10px calc(10px + var(--safe-bottom));
   margin: 0;
-  background: #20261f;
-  backdrop-filter: blur(20px);
-  border-top-left-radius: 24px;
-  border-top-right-radius: 24px;
+  background-color: var(--chrome);
   box-shadow: 0 -12px 30px rgba(0,0,0,.18);
   overflow: visible;
 }
 
-.bottom-nav::before,
-.bottom-nav::after {
+.bottom-nav::before {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  background: #20261f;
+  bottom: calc(-1 * (var(--safe-bottom) + 180px));
+  height: calc(var(--safe-bottom) + 220px);
+  background-color: var(--chrome);
   pointer-events: none;
-}
-
-.bottom-nav::before {
-  bottom: 0;
-  height: calc(var(--safe-bottom) + 18px);
-  z-index: -1;
-}
-
-.bottom-nav::after {
-  bottom: -160px;
-  height: 160px;
   z-index: -1;
 }
 
 @media (display-mode: standalone) {
-  .bottom-nav {
-    padding-bottom: calc(14px + var(--safe-bottom));
-  }
+  .bottom-nav { padding-bottom: calc(12px + var(--safe-bottom)); }
 }
 
 .nav-item {
@@ -271,6 +237,13 @@ h3 { font-size: 1rem; margin-bottom: .35rem; }
   flex-direction: column;
   align-items: center;
   gap: 2px;
+}
+
+.version-note {
+  margin: -2px 0 0;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 800;
 }
 
 .nav-item span { font-size: 1.15rem; line-height: 1; }
