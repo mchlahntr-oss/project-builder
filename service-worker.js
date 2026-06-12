@@ -1,11 +1,11 @@
-const CACHE_NAME = 'house-project-tracker-v9';
+const CACHE_NAME = 'house-project-tracker-v10';
 const ASSETS = [
   './',
   './index.html',
-  './index.html?v=9',
-  './styles.css?v=9',
-  './app.js?v=9',
-  './manifest.webmanifest?v=9',
+  './index.html?v=10',
+  './styles.css?v=10',
+  './app.js?v=10',
+  './manifest.webmanifest?v=10',
   './styles.css',
   './app.js',
   './manifest.webmanifest'
