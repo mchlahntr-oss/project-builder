@@ -93,3 +93,10 @@ After uploading, open the app URL with `?v=10` once, such as `https://yourname.g
 This build stops using a calculated JavaScript app height for the main shell. The shell is now pinned with `top: 0` and `bottom: 0`, so the browser stretches it to the full available iPhone screen instead of relying on a viewport height value that can be reported too short. The bottom nav no longer adds extra safe-area padding that can look like unused space below the menu. The storage key remains `houseProjectTracker.v1`.
 
 After uploading, open `index.html?v=10` once and confirm Settings says `Build v11`.
+
+
+## v12 hard bottom pull
+
+This build confirms the bottom issue is not cached code. The app now uses a hard iOS bottom pull: on WebKit/iPhone it extends the app shell below the visible viewport and clips the extra portion, leaving only a compact 72px dock visible at the physical bottom of the screen. Settings also includes viewport diagnostics so the exact nav/shell measurements can be checked if the issue persists.
+
+After uploading, open `index.html?v=12` once and confirm Settings says `Build v12 · hard bottom pull + diagnostics`.

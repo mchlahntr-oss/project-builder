@@ -10,7 +10,7 @@
 
   <script>
     /* Disable page zoom as much as mobile browsers allow.
-       v10 fit: keeps zoom disabled and pulls the bottom navigation into the iPhone safe-area so there is no dead strip below it. */
+       v12 fit: keeps zoom disabled and hard-pulls the bottom dock through iPhone safe-area quirks. */
     (() => {
       const lockedViewport = 'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content';
       const editableSelector = 'input, textarea, select, button, [contenteditable="true"]';
@@ -27,9 +27,9 @@
       }
 
       function setAppHeight() {
-        // v10: do not drive shell height with JS. The shell is pinned, and
-        // the bottom nav is pulled into the iPhone safe-area. This variable
-        // is only diagnostic/fallback information for future debugging.
+        // v12: do not drive shell height with JS. The shell is pinned, and
+        // CSS hard-pulls the dock through iPhone safe-area quirks. This variable
+        // is diagnostic/fallback information for future debugging.
         const visualHeight = window.visualViewport ? window.visualViewport.height : 0;
         const layoutHeight = window.innerHeight || document.documentElement.clientHeight || 0;
         const screenHeight = window.screen && window.screen.height ? window.screen.height : 0;
@@ -91,8 +91,8 @@
     })();
   </script>
   <title>House Project Tracker</title>
-  <link rel="manifest" href="manifest.webmanifest?v=11" />
-  <link rel="stylesheet" href="styles.css?v=11" />
+  <link rel="manifest" href="manifest.webmanifest?v=12" />
+  <link rel="stylesheet" href="styles.css?v=12" />
 </head>
 <body>
   <div class="app-shell">
@@ -266,7 +266,8 @@
         <button class="icon-btn" id="closeSettings" aria-label="Close">×</button>
       </div>
       <p class="muted">Data is saved on this device. Use export/import to back it up or move it to another phone.</p>
-      <p class="version-note">Build v11 · edge-to-edge bottom dock</p>
+      <p class="version-note">Build v12 · hard bottom pull + diagnostics</p>
+      <p class="version-note" id="viewportDebug">Viewport diagnostics loading…</p>
       <div class="stack">
         <button class="secondary" id="exportData">Export backup JSON</button>
         <label class="file-import">Import backup JSON
@@ -285,6 +286,6 @@
     </section>
   </template>
 
-  <script src="app.js?v=11"></script>
+  <script src="app.js?v=12"></script>
 </body>
 </html>

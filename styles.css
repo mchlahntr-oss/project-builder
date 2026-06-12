@@ -13,7 +13,8 @@
   --chrome: #20261f;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
-  --nav-height: 86px;
+  --nav-height: 72px;
+  --ios-bottom-pull: 0px;
   --app-height: 100%;
   --reported-height: 100%;
 }
@@ -499,4 +500,86 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); box-sha
   .task-actions, .expense-actions { grid-column: 1 / -1; display: flex; justify-content: flex-start; }
   .bottom-nav { gap: 3px; padding-inline: 7px; }
   .nav-item { font-size: .66rem; padding-inline: 2px; }
+}
+
+
+/* v12 iPhone hard-bottom fix
+   The confirmed v10/v11 builds mean caching was not the cause. On this iPhone/PWA mode,
+   the browser is still exposing a bottom home-indicator reservation. Instead of trusting
+   env(safe-area-inset-bottom), this build pulls the app shell 34px below the viewport on
+   WebKit/iOS and clips the extra portion. The visible dock is a compact 72px row that ends
+   at the real screen bottom. */
+:root {
+  --nav-height: 72px;
+  --ios-bottom-pull: 0px;
+}
+
+.app-shell {
+  grid-template-rows: auto minmax(0, 1fr) var(--nav-height) !important;
+}
+
+.bottom-nav {
+  height: var(--nav-height) !important;
+  min-height: var(--nav-height) !important;
+  align-items: stretch !important;
+  place-items: stretch !important;
+  padding: 6px 8px !important;
+  overflow: hidden !important;
+}
+
+.nav-item {
+  min-height: 0 !important;
+  height: 100% !important;
+  justify-content: center !important;
+  padding: 4px 2px !important;
+  border-radius: 14px !important;
+}
+
+.nav-item span {
+  font-size: 1rem !important;
+}
+
+@supports (-webkit-touch-callout: none) {
+  :root {
+    --ios-bottom-pull: 34px;
+    --nav-height: 72px;
+  }
+
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+    :root {
+      --ios-bottom-pull: max(env(safe-area-inset-bottom), 34px);
+    }
+  }
+
+  body {
+    position: fixed !important;
+    inset: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .app-shell {
+    top: 0 !important;
+    bottom: calc(-1 * var(--ios-bottom-pull)) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    grid-template-rows: auto minmax(0, 1fr) calc(var(--nav-height) + var(--ios-bottom-pull)) !important;
+  }
+
+  .content {
+    padding-bottom: 16px !important;
+  }
+
+  .bottom-nav {
+    height: calc(var(--nav-height) + var(--ios-bottom-pull)) !important;
+    min-height: calc(var(--nav-height) + var(--ios-bottom-pull)) !important;
+    padding: 6px 8px var(--ios-bottom-pull) !important;
+    align-items: start !important;
+    place-items: stretch !important;
+    box-shadow: 0 -8px 22px rgba(0,0,0,.16) !important;
+  }
+
+  .nav-item {
+    height: calc(var(--nav-height) - 12px) !important;
+    min-height: 0 !important;
+  }
 }

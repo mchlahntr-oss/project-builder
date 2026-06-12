@@ -605,11 +605,36 @@ if ('serviceWorker' in navigator) {
   });
 
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js?v=8').then(registration => {
+    navigator.serviceWorker.register('./service-worker.js?v=12').then(registration => {
       registration.update();
       if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
     }).catch(console.warn);
   });
 }
+
+
+function updateViewportDiagnostics() {
+  const el = document.getElementById('viewportDebug');
+  if (!el) return;
+  const shell = document.querySelector('.app-shell');
+  const nav = document.querySelector('.bottom-nav');
+  const shellRect = shell ? shell.getBoundingClientRect() : null;
+  const navRect = nav ? nav.getBoundingClientRect() : null;
+  const navStyle = nav ? getComputedStyle(nav) : null;
+  const visual = window.visualViewport ? Math.round(window.visualViewport.height) : 'n/a';
+  const inner = Math.round(window.innerHeight || 0);
+  const client = Math.round(document.documentElement.clientHeight || 0);
+  const navHeight = navRect ? Math.round(navRect.height) : 'n/a';
+  const navBottom = navRect ? Math.round(navRect.bottom) : 'n/a';
+  const shellBottom = shellRect ? Math.round(shellRect.bottom) : 'n/a';
+  const paddingBottom = navStyle ? navStyle.paddingBottom : 'n/a';
+  el.textContent = `Viewport: inner ${inner}px · visual ${visual}px · client ${client}px · nav ${navHeight}px · nav bottom ${navBottom}px · shell bottom ${shellBottom}px · nav pad ${paddingBottom}`;
+}
+
+['load', 'resize', 'orientationchange', 'pageshow'].forEach(eventName => {
+  window.addEventListener(eventName, () => setTimeout(updateViewportDiagnostics, 80));
+});
+if (window.visualViewport) window.visualViewport.addEventListener('resize', () => setTimeout(updateViewportDiagnostics, 80));
+setTimeout(updateViewportDiagnostics, 250);
 
 render();
