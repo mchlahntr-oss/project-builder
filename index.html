@@ -10,7 +10,7 @@
 
   <script>
     /* Disable page zoom as much as mobile browsers allow.
-       This blocks iOS focus zoom, pinch zoom, and double-tap zoom inside the PWA. */
+       This blocks iOS focus zoom, pinch zoom, double-tap zoom, and iPhone safe-area layout gaps inside the PWA. */
     (() => {
       const lockedViewport = 'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content';
       const editableSelector = 'input, textarea, select, button, [contenteditable="true"]';
@@ -26,6 +26,11 @@
         viewport.setAttribute('content', lockedViewport);
       }
 
+      function setAppHeight() {
+        const visualHeight = window.visualViewport && window.visualViewport.height ? window.visualViewport.height : window.innerHeight;
+        document.documentElement.style.setProperty('--app-height', `${Math.round(visualHeight)}px`);
+      }
+
       function normalizeControl(target) {
         if (!target || !target.matches || !target.matches(editableSelector)) return;
         target.style.fontSize = '16px';
@@ -35,12 +40,19 @@
       }
 
       lockViewport();
-      document.addEventListener('DOMContentLoaded', lockViewport);
-      window.addEventListener('pageshow', lockViewport);
-      window.addEventListener('resize', lockViewport);
+      setAppHeight();
+      document.addEventListener('DOMContentLoaded', () => { lockViewport(); setAppHeight(); });
+      window.addEventListener('pageshow', () => { lockViewport(); setAppHeight(); });
+      window.addEventListener('resize', () => { lockViewport(); setAppHeight(); });
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', setAppHeight);
+        window.visualViewport.addEventListener('scroll', setAppHeight);
+      }
+
       window.addEventListener('orientationchange', () => {
         lockViewport();
-        setTimeout(lockViewport, 250);
+        setAppHeight();
+        setTimeout(() => { lockViewport(); setAppHeight(); }, 250);
       });
 
       document.addEventListener('focusin', event => {
