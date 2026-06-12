@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#20261f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="House Projects" />
+  <title>House Project Tracker</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">House project tracker</p>
+        <h1 id="screenTitle">Dashboard</h1>
+      </div>
+      <button class="icon-btn" id="openSettings" aria-label="Open settings">⚙︎</button>
+    </header>
+
+    <main id="app" class="content" aria-live="polite"></main>
+
+    <nav class="bottom-nav" aria-label="Primary navigation">
+      <button class="nav-item active" data-route="dashboard">
+        <span>⌂</span>
+        Dashboard
+      </button>
+      <button class="nav-item" data-route="tasks">
+        <span>✓</span>
+        Tasks
+      </button>
+      <button class="nav-item" data-route="projects">
+        <span>▣</span>
+        Projects
+      </button>
+      <button class="nav-item" data-route="budget">
+        <span>$</span>
+        Budget
+      </button>
+      <button class="nav-item" data-route="add">
+        <span>＋</span>
+        Add
+      </button>
+    </nav>
+  </div>
+
+  <dialog id="taskDialog" class="modal">
+    <form method="dialog" id="taskForm" class="modal-card">
+      <div class="modal-head">
+        <h2 id="taskFormTitle">Add task</h2>
+        <button class="icon-btn" value="cancel" type="submit" aria-label="Close">×</button>
+      </div>
+      <input type="hidden" id="taskId" />
+      <label>Task name
+        <input id="taskTitle" required maxlength="80" placeholder="Install smart lock" />
+      </label>
+      <label>Project
+        <select id="taskProject"></select>
+      </label>
+      <div class="two-col">
+        <label>Area
+          <input id="taskArea" maxlength="40" placeholder="Kitchen, basement, hot tub" />
+        </label>
+        <label>Priority
+          <select id="taskPriority">
+            <option>High</option>
+            <option selected>Medium</option>
+            <option>Low</option>
+          </select>
+        </label>
+      </div>
+      <div class="two-col">
+        <label>Status
+          <select id="taskStatus">
+            <option>Not started</option>
+            <option>In progress</option>
+            <option>Blocked</option>
+            <option>Done</option>
+          </select>
+        </label>
+        <label>Due date
+          <input id="taskDue" type="date" />
+        </label>
+      </div>
+      <label>Notes
+        <textarea id="taskNotes" rows="3" placeholder="Materials, measurements, next step..."></textarea>
+      </label>
+      <div class="modal-actions">
+        <button type="button" id="deleteTask" class="danger ghost hidden">Delete</button>
+        <button type="submit" class="primary">Save task</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="projectDialog" class="modal">
+    <form method="dialog" id="projectForm" class="modal-card">
+      <div class="modal-head">
+        <h2 id="projectFormTitle">Add project</h2>
+        <button class="icon-btn" value="cancel" type="submit" aria-label="Close">×</button>
+      </div>
+      <input type="hidden" id="projectId" />
+      <label>Project name
+        <input id="projectName" required maxlength="70" placeholder="Pennsylvania House" />
+      </label>
+      <label>Location / short label
+        <input id="projectLocation" maxlength="70" placeholder="Manns Choice, PA" />
+      </label>
+      <div class="two-col">
+        <label>Target budget
+          <input id="projectBudget" type="number" min="0" step="1" placeholder="5000" />
+        </label>
+        <label>Goal date
+          <input id="projectGoal" type="date" />
+        </label>
+      </div>
+      <label>Notes
+        <textarea id="projectNotes" rows="3" placeholder="STR readiness, repairs, punch list..."></textarea>
+      </label>
+      <div class="modal-actions">
+        <button type="button" id="deleteProject" class="danger ghost hidden">Delete</button>
+        <button type="submit" class="primary">Save project</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="expenseDialog" class="modal">
+    <form method="dialog" id="expenseForm" class="modal-card">
+      <div class="modal-head">
+        <h2 id="expenseFormTitle">Add expense</h2>
+        <button class="icon-btn" value="cancel" type="submit" aria-label="Close">×</button>
+      </div>
+      <input type="hidden" id="expenseId" />
+      <label>Description
+        <input id="expenseTitle" required maxlength="80" placeholder="Vinyl liner, paint, cleaner" />
+      </label>
+      <div class="two-col">
+        <label>Amount
+          <input id="expenseAmount" required type="number" min="0" step="0.01" placeholder="120.00" />
+        </label>
+        <label>Date
+          <input id="expenseDate" type="date" />
+        </label>
+      </div>
+      <label>Project
+        <select id="expenseProject"></select>
+      </label>
+      <div class="two-col">
+        <label>Category
+          <select id="expenseCategory">
+            <option>Materials</option>
+            <option>Tools</option>
+            <option>Labor</option>
+            <option>Furniture</option>
+            <option>Utilities</option>
+            <option>Cleaning</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label>Paid?
+          <select id="expensePaid">
+            <option value="true">Paid</option>
+            <option value="false">Planned</option>
+          </select>
+        </label>
+      </div>
+      <label>Vendor / notes
+        <input id="expenseVendor" maxlength="80" placeholder="Ace, Menards, Amazon, local contractor" />
+      </label>
+      <div class="modal-actions">
+        <button type="button" id="deleteExpense" class="danger ghost hidden">Delete</button>
+        <button type="submit" class="primary">Save expense</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="settingsDialog" class="modal">
+    <section class="modal-card settings-panel">
+      <div class="modal-head">
+        <h2>Settings</h2>
+        <button class="icon-btn" id="closeSettings" aria-label="Close">×</button>
+      </div>
+      <p class="muted">Data is saved on this device. Use export/import to back it up or move it to another phone.</p>
+      <div class="stack">
+        <button class="secondary" id="exportData">Export backup JSON</button>
+        <label class="file-import">Import backup JSON
+          <input type="file" id="importData" accept="application/json" />
+        </label>
+        <button class="danger ghost" id="resetData">Reset demo data</button>
+      </div>
+    </section>
+  </dialog>
+
+  <template id="emptyStateTpl">
+    <section class="empty-state">
+      <div class="empty-icon">⌂</div>
+      <h2>No items yet</h2>
+      <p>Add a project, task, or expense to start tracking work across your houses.</p>
+    </section>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
