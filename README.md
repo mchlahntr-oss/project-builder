@@ -36,3 +36,22 @@ http://localhost:8080
 ## Notes
 
 This version stores data locally on the device. It does not use a database, login system, or cloud sync. Use Settings → Export backup JSON before changing phones or clearing browser data.
+
+## Updating an existing GitHub Pages install without deleting data
+
+This app stores project/task/budget data in the browser using the same local storage key: `houseProjectTracker.v1`. Updating the files in the same GitHub repository and keeping the same Pages URL should preserve existing data.
+
+Before updating, open the app and use Export Backup. Save the JSON file somewhere safe.
+
+To update GitHub Pages:
+1. Unzip the latest app package.
+2. Open the existing GitHub repository. Do not create a new repository and do not rename the old one.
+3. Upload/replace these files at the repository root: `index.html`, `styles.css`, `app.js`, `manifest.webmanifest`, and `service-worker.js`.
+4. Commit the changes to the same branch used for GitHub Pages, usually `main`.
+5. Open the existing Pages URL on your phone. If the old version still shows, close the browser/app completely and reopen it, or refresh the page.
+
+Avoid clearing browser/site data unless you have exported a backup first. Clearing site data can remove the local project list.
+
+## Mobile scaling fix included
+
+This version locks the mobile viewport, prevents horizontal overflow, disables mobile text auto-resizing, and keeps form fields at a 16px font size to prevent iPhone input-focus zoom.
