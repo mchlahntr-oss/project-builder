@@ -60,3 +60,8 @@ This version locks the mobile viewport, prevents horizontal overflow, disables m
 ## v3 mobile zoom fix
 
 This version adds a stricter iOS/Safari focus-zoom fix. Every editable field is forced to a 16px computed font size, the viewport lock is reasserted when a field receives focus, and the service worker cache is bumped to `house-project-tracker-v3`. The app data storage key remains unchanged, so replacing the files at the same GitHub Pages URL should preserve existing local data.
+
+
+## v4 no-zoom hardening
+
+This version adds a stronger mobile zoom lock. It uses a stricter viewport tag, blocks pinch gestures and double-tap zoom events where browsers permit it, re-locks the viewport on focus/orientation changes, and keeps all editable controls at 16px or larger. The app data storage key remains `houseProjectTracker.v1`, so replacing files at the same GitHub Pages URL should preserve existing local data.

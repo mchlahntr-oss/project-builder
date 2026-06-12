@@ -2,34 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
   <meta name="theme-color" content="#20261f" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="House Projects" />
 
   <script>
-    /* Prevent iOS/Safari input-focus zoom. Keep all editable controls at 16px+ and reassert the viewport on focus. */
+    /* Disable page zoom as much as mobile browsers allow.
+       This blocks iOS focus zoom, pinch zoom, and double-tap zoom inside the PWA. */
     (() => {
-      const viewport = document.querySelector('meta[name="viewport"]');
-      const lockedViewport = 'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';
-      if (viewport) viewport.setAttribute('content', lockedViewport);
+      const lockedViewport = 'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content';
+      const editableSelector = 'input, textarea, select, button, [contenteditable="true"]';
+      let lastTouchEnd = 0;
 
-      const editableSelector = 'input, textarea, select, [contenteditable="true"]';
-
-      document.addEventListener('focusin', event => {
-        const target = event.target;
-        if (target && target.matches && target.matches(editableSelector)) {
-          if (viewport) viewport.setAttribute('content', lockedViewport);
-          target.style.fontSize = '16px';
-          target.style.lineHeight = '1.35';
+      function lockViewport() {
+        let viewport = document.querySelector('meta[name="viewport"]');
+        if (!viewport) {
+          viewport = document.createElement('meta');
+          viewport.name = 'viewport';
+          document.head.appendChild(viewport);
         }
+        viewport.setAttribute('content', lockedViewport);
+      }
+
+      function normalizeControl(target) {
+        if (!target || !target.matches || !target.matches(editableSelector)) return;
+        target.style.fontSize = '16px';
+        target.style.lineHeight = '1.35';
+        target.style.webkitTextSizeAdjust = '100%';
+        target.style.textSizeAdjust = '100%';
+      }
+
+      lockViewport();
+      document.addEventListener('DOMContentLoaded', lockViewport);
+      window.addEventListener('pageshow', lockViewport);
+      window.addEventListener('resize', lockViewport);
+      window.addEventListener('orientationchange', () => {
+        lockViewport();
+        setTimeout(lockViewport, 250);
       });
 
-      document.addEventListener('gesturestart', event => event.preventDefault());
-      document.addEventListener('touchmove', event => {
-        if (event.scale && event.scale !== 1) event.preventDefault();
+      document.addEventListener('focusin', event => {
+        lockViewport();
+        normalizeControl(event.target);
+        setTimeout(lockViewport, 50);
+        setTimeout(lockViewport, 250);
+      }, true);
+
+      document.addEventListener('touchstart', event => {
+        lockViewport();
+        if (event.touches && event.touches.length > 1) event.preventDefault();
       }, { passive: false });
+
+      document.addEventListener('touchmove', event => {
+        if ((event.touches && event.touches.length > 1) || (typeof event.scale === 'number' && event.scale !== 1)) {
+          event.preventDefault();
+        }
+      }, { passive: false });
+
+      document.addEventListener('touchend', event => {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 450) event.preventDefault();
+        lastTouchEnd = now;
+      }, { passive: false });
+
+      ['gesturestart', 'gesturechange', 'gestureend'].forEach(type => {
+        document.addEventListener(type, event => event.preventDefault(), { passive: false });
+      });
     })();
   </script>
   <title>House Project Tracker</title>

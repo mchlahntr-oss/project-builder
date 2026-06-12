@@ -13,15 +13,21 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+*::before,
+*::after { box-sizing: border-box; }
 
 html {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-  touch-action: manipulation;
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+  touch-action: pan-x pan-y;
 }
 
 body {
@@ -29,6 +35,7 @@ body {
   min-height: 100%;
   overflow-x: hidden;
   overscroll-behavior-x: none;
+  touch-action: pan-x pan-y;
 }
 
 html, body { height: 100%; }
@@ -42,9 +49,14 @@ body {
     linear-gradient(180deg, #f4efe6 0%, var(--bg) 42%, #efe9dd 100%);
 }
 
-button, input, select, textarea {
-  font: inherit;
-  font-size: 16px;
+button,
+input,
+select,
+textarea,
+[contenteditable="true"] {
+  font-family: inherit;
+  font-size: 16px !important;
+  line-height: 1.35 !important;
 }
 
 button {
@@ -84,6 +96,26 @@ textarea,
 select {
   -webkit-appearance: none;
   appearance: none;
+}
+
+/* v4 no-zoom hardening. Keeps iPhone Safari from auto-zooming form fields and blocks double-tap zoom behavior in supporting browsers. */
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+  font-size: 16px !important;
+  transform: none !important;
+}
+
+@media (max-width: 900px) {
+  input,
+  textarea,
+  select,
+  button,
+  [contenteditable="true"] {
+    font-size: 16px !important;
+    line-height: 1.35 !important;
+  }
 }
 
 
