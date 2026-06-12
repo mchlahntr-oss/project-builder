@@ -10,7 +10,7 @@
 
   <script>
     /* Disable page zoom as much as mobile browsers allow.
-       This blocks iOS focus zoom, pinch zoom, double-tap zoom, and iPhone safe-area layout gaps inside the PWA. */
+       This blocks iOS focus zoom, pinch zoom, double-tap zoom, and iPhone safe-area layout gaps inside the PWA. v7 pins the app shell to the full viewport and fixes the nav to the physical bottom edge. */
     (() => {
       const lockedViewport = 'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content';
       const editableSelector = 'input, textarea, select, button, [contenteditable="true"]';
@@ -27,8 +27,10 @@
       }
 
       function setAppHeight() {
-        const visualHeight = window.visualViewport && window.visualViewport.height ? window.visualViewport.height : window.innerHeight;
-        document.documentElement.style.setProperty('--app-height', `${Math.round(visualHeight)}px`);
+        // v7: keep CSS responsible for height via fixed inset: 0. Do not write
+        // window.innerHeight into CSS because iOS can report a value that excludes
+        // the home-indicator region, leaving a white strip below the nav.
+        document.documentElement.style.setProperty('--app-height', '100vh');
       }
 
       function normalizeControl(target) {

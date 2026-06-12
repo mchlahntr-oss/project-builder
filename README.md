@@ -74,3 +74,8 @@ This v5 build keeps the same local storage key (`houseProjectTracker.v1`) and on
 
 ## v6 layout fix
 This version keeps the same local data storage key (`houseProjectTracker.v1`) and extends the bottom navigation/background through the iPhone safe-area/home-indicator region to remove the white gap below the menu.
+
+
+## v7 iPhone bottom gap fix
+
+This version pins the app shell to the full viewport with `inset: 0`, fixes the bottom navigation to `bottom: 0`, extends the dark background behind the iPhone safe area, and avoids writing `window.innerHeight` into the layout because that can create a white strip near the home indicator. The data storage key remains `houseProjectTracker.v1`.
