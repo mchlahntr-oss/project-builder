@@ -598,7 +598,7 @@ document.getElementById('resetData').addEventListener('click', () => {
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js').catch(console.warn);
+    navigator.serviceWorker.register('./service-worker.js').then(registration => registration.update()).catch(console.warn);
   });
 }
 

@@ -55,3 +55,8 @@ Avoid clearing browser/site data unless you have exported a backup first. Cleari
 ## Mobile scaling fix included
 
 This version locks the mobile viewport, prevents horizontal overflow, disables mobile text auto-resizing, and keeps form fields at a 16px font size to prevent iPhone input-focus zoom.
+
+
+## v3 mobile zoom fix
+
+This version adds a stricter iOS/Safari focus-zoom fix. Every editable field is forced to a 16px computed font size, the viewport lock is reasserted when a field receives focus, and the service worker cache is bumped to `house-project-tracker-v3`. The app data storage key remains unchanged, so replacing the files at the same GitHub Pages URL should preserve existing local data.
